@@ -15,17 +15,10 @@
         android:text="Hello World!"
         android:id="@+id/textView" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Load Picture"
+        android:text="Load Source"
         android:id="@+id/loadPictureButton"
         android:layout_below="@+id/textView"
         android:layout_alignParentStart="true" />
@@ -35,7 +28,38 @@
         android:layout_height="wrap_content"
         android:text="Analyze"
         android:id="@+id/analyzeButton"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Load Reference"
+        android:id="@+id/loadRefButton"
         android:layout_alignTop="@+id/loadPictureButton"
-        android:layout_toEndOf="@+id/loadPictureButton" />
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:id="@+id/sourceView"
+        android:layout_alignTop="@+id/loadPictureButton" />
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:id="@+id/refView"
+        android:layout_alignTop="@+id/loadRefButton"
+        android:layout_toEndOf="@+id/sourceView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="No Input"
+        android:id="@+id/resultView"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/analyzeButton"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
