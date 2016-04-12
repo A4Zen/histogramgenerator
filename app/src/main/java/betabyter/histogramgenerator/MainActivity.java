@@ -1,6 +1,7 @@
 package betabyter.histogramgenerator;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,6 +30,10 @@ import org.opencv.core.MatOfInt;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -78,15 +83,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
 
-
-                // Set the options for Bitmaps to ARGB_8888.
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                options.inJustDecodeBounds = true;
+                File source = new File(sourcePath);
+                File ref = new File(refPath);
 
                 // Create the source and reference image.
-                Bitmap SourceImage = BitmapFactory.decodeFile(sourcePath, options);
-                Bitmap refImage = BitmapFactory.decodeFile(refPath, options);
+                Bitmap SourceImage = decodeFile(source);
+                Bitmap refImage = decodeFile(ref);
 
                 // Create Mats for the HSV values of the reference and source.
                 Mat hsvRef = new Mat();
@@ -126,11 +128,17 @@ public class MainActivity extends AppCompatActivity {
                 Imgproc.calcHist(histImages, channels, new Mat(), histSource, histSize, ranges, false);
                 Core.normalize(histSource, histSource, 0, 1, Core.NORM_MINMAX, -1, new Mat());
 
-                // TODO: Compare histRef with histSource.
+                // Compares the two histograms and reports the result to the resultView. Note that
+                // the compare threshold can be edited to be more lax by decreasing the threshold,
+                // and vice versa.
                 double compareResult = Imgproc.compareHist(histSource, histRef, Imgproc.CV_COMP_CORREL);
-                if (compareResult <= 1) {
-                    resView.setText("Match!");
-                } else {
+                Log.d("Analyze:", "Compare Result was: " + compareResult);
+                if (compareResult >= .50) {
+                    resView.setText("Sure Match!");
+                } else if (compareResult >= .20 && compareResult < .50)  {
+                    resView.setText("Images are likely of the same people.");
+                }
+                else {
                     resView.setText("Images are of different people.");
                 }
 
@@ -193,5 +201,53 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setImageBitmap(BitmapFactory.decodeFile(refPath));
             }
         }
+    }
+
+    private Bitmap decodeFile(File f){
+        Bitmap b;
+        Bitmap error = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+        FileInputStream fis;
+        int IMAGE_MAX_SIZE = 100;
+
+        //Decode image size
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        o.inPreferredConfig = Bitmap.Config.ARGB_8888;
+
+        try {
+            fis = new FileInputStream(f);
+            BitmapFactory.decodeStream(fis, null, o);
+        } catch (FileNotFoundException e) {
+            Log.d("Analyze:", "Unable to find the file ." + f.getAbsolutePath());
+            e.printStackTrace();
+            return error;
+        }
+
+        int scale = 1;
+        if (o.outHeight > IMAGE_MAX_SIZE || o.outWidth > IMAGE_MAX_SIZE) {
+            scale = (int)Math.pow(2, (int) Math.ceil(Math.log(IMAGE_MAX_SIZE /
+                    (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
+        }
+
+        //Decode with inSampleSize
+        try {
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            fis = new FileInputStream(f);
+            b = BitmapFactory.decodeStream(fis, null, o2);
+        } catch (FileNotFoundException e) {
+            Log.d("Analyze:", "Unable to find the file ." + f.getAbsolutePath());
+            e.printStackTrace();
+            return error;
+        }
+
+        try {
+            fis.close();
+        } catch (IOException e) {
+            Log.d("Analyze:", "Unable to close the file input stream.");
+            e.printStackTrace();
+            System.exit(0);
+        }
+        return b;
     }
 }
