@@ -1,7 +1,6 @@
 package betabyter.histogramgenerator;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -48,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageView srcView = (ImageView) findViewById(R.id.sourceView);
-        ImageView refView = (ImageView) findViewById(R.id.refView);
         final TextView resView = (TextView) findViewById(R.id.resultView);
 
         if (!OpenCVLoader.initDebug()) {
@@ -134,12 +131,12 @@ public class MainActivity extends AppCompatActivity {
                 double compareResult = Imgproc.compareHist(histSource, histRef, Imgproc.CV_COMP_CORREL);
                 Log.d("Analyze:", "Compare Result was: " + compareResult);
                 if (compareResult >= .50) {
-                    resView.setText("Sure Match!");
+                    resView.setText(R.string.match);
                 } else if (compareResult >= .20 && compareResult < .50)  {
-                    resView.setText("Images are likely of the same people.");
+                    resView.setText(R.string.possible);
                 }
                 else {
-                    resView.setText("Images are of different people.");
+                    resView.setText(R.string.fail);
                 }
 
             }
