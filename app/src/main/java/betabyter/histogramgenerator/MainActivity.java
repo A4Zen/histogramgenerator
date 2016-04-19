@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -23,13 +22,6 @@ public class MainActivity extends AppCompatActivity
     private String TAG = "Main Activity";
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
-
-    private static int RESULT_LOAD_SOURCE = 1;
-    private static int RESULT_LOAD_REF = 2;
-    private String sourcePath;
-    private String refPath;
-
-    TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,11 +111,6 @@ public class MainActivity extends AppCompatActivity
         setIntent(intent);
     }
 
-    void processIntent(Intent intent) {
-        Log.d(TAG, "Intent is being processed.");
-
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -135,10 +122,20 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "Image selected in Histogram Fragment.");
 
+        int RESULT_LOAD_SOURCE = 1;
+        String sourcePath;
+        String refPath;
+
         Uri selectedImage = data.getData();
         String[] filePathColumn = { MediaStore.Images.Media.DATA};
         Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-        cursor.moveToFirst();
+
+        try {
+            cursor.moveToFirst();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         String picPath = cursor.getString(columnIndex);
         cursor.close();

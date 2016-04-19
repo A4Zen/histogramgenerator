@@ -174,14 +174,7 @@ public class HistogramFragment extends Fragment {
                 // and vice versa.
                 double compareResult = Imgproc.compareHist(histSource, histRef, Imgproc.CV_COMP_CORREL);
                 Log.d("Analyze:", "Compare Result was: " + compareResult);
-                if (compareResult >= .50) {
-                    resView.setText(R.string.match);
-                } else if (compareResult >= .20 && compareResult < .50) {
-                    resView.setText(R.string.possible);
-                } else {
-                    resView.setText(R.string.fail);
-                }
-
+                resView.setText("Correlation Result: " + (Math.round(compareResult*10000.0)/10000.0));
             }
         });
     }
