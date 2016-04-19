@@ -52,7 +52,8 @@ import java.util.List;
 public class HistogramFragment extends Fragment {
     private static String LOGTAG = "HistogramFragment";
 
-    private static int RESULT_LOAD_IMAGE = 1;
+    private static int RESULT_LOAD_SOURCE = 1;
+    private static int RESULT_LOAD_REF = 2;
     private String sourcePath;
     private String refPath;
 
@@ -104,7 +105,7 @@ public class HistogramFragment extends Fragment {
             public void onClick(View arg0) {
                 boolean isSource = true;
                 Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                getActivity().startActivityForResult(i, RESULT_LOAD_IMAGE);
+                getActivity().startActivityForResult(i, RESULT_LOAD_SOURCE);
             }
         });
 
@@ -114,7 +115,7 @@ public class HistogramFragment extends Fragment {
             public void onClick(View arg0) {
                 boolean isSource = false;
                 Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                getActivity().startActivityForResult(i, RESULT_LOAD_IMAGE);
+                getActivity().startActivityForResult(i, RESULT_LOAD_REF);
             }
         });
 
@@ -258,5 +259,13 @@ public class HistogramFragment extends Fragment {
             System.exit(0);
         }
         return b;
+    }
+
+    public void setSourcePath(String source) {
+        sourcePath = source;
+    }
+
+    public void setRefPath(String ref) {
+        refPath = ref;
     }
 }

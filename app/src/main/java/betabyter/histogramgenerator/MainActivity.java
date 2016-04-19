@@ -24,10 +24,10 @@ public class MainActivity extends AppCompatActivity
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
 
-    private static int RESULT_LOAD_IMAGE = 1;
+    private static int RESULT_LOAD_SOURCE = 1;
+    private static int RESULT_LOAD_REF = 2;
     private String sourcePath;
     private String refPath;
-    private boolean isSource = false;
 
     TextView mTextView;
 
@@ -142,12 +142,16 @@ public class MainActivity extends AppCompatActivity
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         String picPath = cursor.getString(columnIndex);
         cursor.close();
-        if(isSource) {
+        HistogramFragment fragment = (HistogramFragment)
+                getSupportFragmentManager().findFragmentById(R.id.container);
+        if(requestCode == RESULT_LOAD_SOURCE) {
             sourcePath = picPath;
+            fragment.setSourcePath(sourcePath);
             ImageView imageView = (ImageView) findViewById(R.id.sourceView);
             imageView.setImageBitmap(BitmapFactory.decodeFile(sourcePath));
         } else {
             refPath = picPath;
+            fragment.setRefPath(refPath);
             ImageView imageView = (ImageView) findViewById(R.id.refView);
             imageView.setImageBitmap(BitmapFactory.decodeFile(refPath));
         }
