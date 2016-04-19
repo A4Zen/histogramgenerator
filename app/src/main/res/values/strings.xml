@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">HistogramGenerator</string>
     <string name="action_settings">Settings</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="com_hist">Compare Histograms</string>
+    <string name="pathfind">Pathfinding</string>
+    <string name="about_us">About Us</string>
+
+    <string name="match">Match!</string>
+    <string name="possible">Images are likely of the same people.</string>
+    <string name="fail">Images are of different people.</string>
 </resources>
