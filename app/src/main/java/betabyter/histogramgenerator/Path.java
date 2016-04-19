@@ -1,6 +1,8 @@
+package betabyter.histogramgenerator;
+
 import java.util.ArrayList;
 
-class Path{
+class Path {
 	//<(N,E,T),...
 	private ArrayList<DataPoint> history;
 	private static float potentialErrorPerTimeUnit = 0f;
@@ -35,7 +37,7 @@ class Path{
 		if (this.size() < 1) return -1f;
 		return this.get(this.size()-1).time();
 	}
-	private static boolean isInvalidPair(Path A,Path B){
+	private static boolean isInvalidPair(Path A, Path B){
 		//TODO: for testing purposes assume the starting times are the same
 		//also assume that the sizes are the same
 		//also assume time is sampled at same rate
@@ -100,7 +102,7 @@ class Path{
 		}
 		return result;
 	}
-	public Path(byte[] myMAC,ArrayList<DataPoint> input,float detect){
+	public Path(byte[] myMAC, ArrayList<DataPoint> input, float detect){
 		potentialErrorPerTimeUnit = 0.01f;
 		detectionRange = detect;
 		int size = myMAC.length;

@@ -1,9 +1,9 @@
-import java.awt.List;
+package betabyter.histogramgenerator;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 class Matcher {
 	private static byte[] MACstringToByteArray(String s) {
