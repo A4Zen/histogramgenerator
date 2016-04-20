@@ -3,6 +3,7 @@ package betabyter.histogramgenerator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,7 +11,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.achartengine.ChartFactory;
+import org.achartengine.GraphicalView;
+import org.achartengine.model.CategorySeries;
+import org.achartengine.model.SeriesSelection;
+import org.achartengine.renderer.DefaultRenderer;
+import org.achartengine.renderer.SimpleSeriesRenderer;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,6 +35,11 @@ import java.util.Set;
  * create an instance of this fragment.
  */
 public class PathfindingFragment extends Fragment {
+
+    //-------------------
+    // Pathfinding variables
+    //-------------------
+
     private static String LOGTAG = "PathfindingFragment";
 
     private OnFragmentInteractionListener mListener;
@@ -62,39 +77,56 @@ public class PathfindingFragment extends Fragment {
     @Override
     public void onViewCreated(View v, Bundle savedInstanceState) {
 
+        //-------------------
+        // Pathfinding test one (dummy data)
+        //-------------------
         Button bt1 = (Button) v.findViewById(R.id.test1Button);
         bt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 boolean[] result = test();
                 printResult(result);
+                printPieChart(result);
             }
         });
 
+        //-------------------
+        // Pathfinding test two (dummy data)
+        //-------------------
         Button bt2 = (Button) v.findViewById(R.id.test2Button);
         bt2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 boolean[] result = test2();
                 printResult(result);
+                printPieChart(result);
             }
         });
 
+        //-------------------
+        // Pathfinding test three (dummy data)
+        //-------------------
         Button bt3 = (Button) v.findViewById(R.id.test3Button);
         bt3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 boolean[] result = test3();
                 printResult(result);
+                printPieChart(result);
             }
         });
 
+
+        //-------------------
+        // Pathfinding test four (dummy data)
+        //-------------------
         Button bt4 = (Button) v.findViewById(R.id.test4Button);
         bt4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 boolean[] result = test4();
                 printResult(result);
+                printPieChart(result);
             }
         });
 
@@ -111,6 +143,59 @@ public class PathfindingFragment extends Fragment {
                 resultView.append(" False\n");
             }
         }
+    }
+
+    private void clearPieChartViews(){
+        RelativeLayout layout = (RelativeLayout) getView().findViewById(R.id.chart);
+        layout.removeAllViews();
+    }
+
+    private void printPieChart(boolean[] results){
+
+        // we want to make sure we aren't just infinitely adding views
+        // so delete whatever views are in there before adding another
+        clearPieChartViews();
+
+        //-----------------
+        // aChartEngine variables
+        //-----------------
+        double oneEleventh = 100.0/11.0; // this is stupid code
+
+        CategorySeries mSeries = new CategorySeries("");
+
+        DefaultRenderer mRenderer = new DefaultRenderer();
+
+        GraphicalView mChartView;
+
+        // get the relativelayout to add the graphicalview to
+        final RelativeLayout layout = (RelativeLayout) getView().findViewById(R.id.chart);
+
+        mRenderer.setShowLegend(false); // don't show the legend
+        mRenderer.setShowLabels(false); // don't show the labels
+        mRenderer.setMargins(new int[]{20, 30, 15, 0});
+        mRenderer.setStartAngle(90);
+
+        // go through each of the results
+        for (int i = 0; i < results.length; i++) {
+            SimpleSeriesRenderer renderer = new SimpleSeriesRenderer();
+            mSeries.add(oneEleventh); // eleven results --> 100/11 = 9.09% of the pie chart
+            if (results[i] == true){
+                renderer.setColor(Color.GREEN);
+            }
+            if (results[i] == false){
+                renderer.setColor(Color.RED);
+            }
+            mRenderer.addSeriesRenderer(renderer);
+        }
+
+        // draw the chart
+        mChartView = ChartFactory.getPieChartView(getContext(), mSeries, mRenderer);
+
+        // add the view to the relative layout
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
+        params.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+        layout.addView(mChartView, params);
     }
 
     @Override
