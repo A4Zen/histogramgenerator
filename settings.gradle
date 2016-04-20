@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':achartengine-1.2.0'
 include ':openCVLibrary310'

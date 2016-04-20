@@ -145,9 +145,9 @@ public class HistogramFragment extends Fragment {
                 Imgproc.cvtColor(srcRef, hsvRef, Imgproc.COLOR_BGR2HSV);
                 Imgproc.cvtColor(srcSource, hsvSource, Imgproc.COLOR_BGR2HSV);
 
-                /// Using 50 bins for hue and 60 for saturation
-                int hBins = 50;
-                int sBins = 60;
+                /// Using 200 bins for hue and 240 for saturation
+                int hBins = 150;
+                int sBins = 190;
                 MatOfInt histSize = new MatOfInt(hBins, sBins);
 
                 // hue varies from 0 to 179, saturation from 0 to 255
@@ -173,8 +173,11 @@ public class HistogramFragment extends Fragment {
                 // the compare threshold can be edited to be more lax by decreasing the threshold,
                 // and vice versa.
                 double compareResult = Imgproc.compareHist(histSource, histRef, Imgproc.CV_COMP_CORREL);
+                if (compareResult < 0) {
+                    compareResult = 0.0;
+                }
                 Log.d("Analyze:", "Compare Result was: " + compareResult);
-                resView.setText("Correlation Result: " + (Math.round(compareResult*10000.0)/10000.0));
+                resView.setText("Correlation Result: \n" + compareResult);
             }
         });
     }
